@@ -1,6 +1,6 @@
-<h1>Account Statement for <%= @user.username %></h1>
+<h1>Extrato bancário de <%= @user.username %></h1>
 
-<h2>Em conta: <%= @user.formatted_balance %></h2>
+<h2>Saldo Atual: <%= @user.formatted_balance %></h2>
 
 <% if @transactions.empty? %>
   <p>Sem transações.</p>
@@ -17,7 +17,7 @@
     <tbody>
       <% @transactions.each do |transaction| %>
         <tr>
-          <td style="padding: 8px;"><%= transaction.created_at.strftime("%Y-%m-%d") %></td>
+          <td style="padding: 8px;"><%= transaction.created_at.strftime("%d/%m/%Y") %></td>
           <td style="padding: 8px;"><%= transaction.created_at.strftime("%H:%M:%S") %></td>
           <td style="padding: 8px;"><%= transaction.description %></td>
           <td style="padding: 8px; text-align: right;">

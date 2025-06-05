@@ -1,17 +1,15 @@
 class UsersController < ApplicationController
- 
   before_action :require_login
 
   def dashboard
-    @user = current_user 
+    @user = current_user
 
     if @user.vip? && @user.balance < 0 && @user.last_negative_balance_at.present?
       calculate_and_apply_vip_negative_balance_fee(@user)
     end
-
   end
 
-    # --- Deposit Actions ---
+  # --- Deposit Actions ---
 
   def deposit_form
     @user = current_user
@@ -30,12 +28,12 @@ class UsersController < ApplicationController
 
     ActiveRecord::Base.transaction do
       @user.balance += amount_in_cents
-      @user.last_negative_balance_at = nil if @user.balance >= 0 # Clear timestamp if balance becomes positive
+      @user.last_negative_balance_at = nil if @user.balance >= 0
 
       if @user.save
         Transaction.create!(
           user: @user,
-          transaction_type: 'deposit',
+          transaction_type: "deposit",
           amount: amount_in_cents,
           description: "Depósito"
         )
@@ -86,7 +84,7 @@ class UsersController < ApplicationController
       if @user.save
         Transaction.create!(
           user: @user,
-          transaction_type: 'withdrawal',
+          transaction_type: "withdrawal",
           amount: amount_in_cents,
           description: "Saque"
         )
@@ -107,7 +105,7 @@ class UsersController < ApplicationController
     @transactions = @user.transactions.order(created_at: :desc)
   end
 
-    # --- Transfer Actions ---
+  # --- Transfer Actions ---
 
   def transfer_form
     @user = current_user
@@ -121,13 +119,13 @@ class UsersController < ApplicationController
 
     # Basic validations
     if amount_in_cents <= 0
-      flash[:alert] = "Transfer amount must be positive."
+      flash[:alert] = "Valor da transferência precisa ser positivo."
       redirect_to transfer_form_path
       return
     end
 
     if recipient_username.blank?
-      flash[:alert] = "Recipient username cannot be empty."
+      flash[:alert] = "conta de destino não pode estar em branco."
       redirect_to transfer_form_path
       return
     end
@@ -135,13 +133,13 @@ class UsersController < ApplicationController
     recipient = User.find_by(username: recipient_username)
 
     if recipient.nil?
-      flash[:alert] = "Recipient account does not exist."
+      flash[:alert] = "conta de destino não encontrada."
       redirect_to transfer_form_path
       return
     end
 
     if recipient == @user
-      flash[:alert] = "Cannot transfer to your own account."
+      flash[:alert] = "Não é possível transferir para sua própria conta."
       redirect_to transfer_form_path
       return
     end
@@ -156,12 +154,12 @@ class UsersController < ApplicationController
       total_debit_cents = amount_in_cents + transfer_fee_cents
     else # Normal User
       # Normal user: R$8.00 fixed fee
-      transfer_fee_cents = 800 # 800 cents = R$8.00
+      transfer_fee_cents = 800
       total_debit_cents = amount_in_cents + transfer_fee_cents
 
       # Normal User Transfer Limit
-      if amount_in_cents > 100000 # R$1,000.00
-        flash[:alert] = "Normal users cannot transfer more than R$1,000.00."
+      if amount_in_cents > 100000
+        flash[:alert] = "você não pode transferir mais de R$1,000.00 por transação."
         redirect_to transfer_form_path
         return
       end
@@ -169,7 +167,7 @@ class UsersController < ApplicationController
 
     # Check if sender has sufficient balance for the transfer + fee
     if @user.balance < total_debit_cents
-      flash[:alert] = "Insufficient balance to cover transfer and fees."
+      flash[:alert] = "transferência não realizada: saldo insuficiente."
       redirect_to transfer_form_path
       return
     end
@@ -189,15 +187,15 @@ class UsersController < ApplicationController
 
       # 3. Save both users
       unless @user.save && recipient.save
-        raise ActiveRecord::Rollback, "Failed to save sender or recipient account."
+        raise ActiveRecord::Rollback, "Falha ao salvar as contas."
       end
 
       # 4. Create sender's transaction record
       Transaction.create!(
         user: @user,
-        transaction_type: 'transfer_out',
+        transaction_type: "transfer_out",
         amount: amount_in_cents, # Amount transferred, not including fee
-        description: "Transfer to account #{recipient.username}",
+        description: "transferência para conta: #{recipient.username}",
         recipient_account_id: recipient.id,
         sender_account_id: @user.id
       )
@@ -205,9 +203,9 @@ class UsersController < ApplicationController
       # 5. Create recipient's transaction record
       Transaction.create!(
         user: recipient,
-        transaction_type: 'transfer_in',
+        transaction_type: "transfer_in",
         amount: amount_in_cents,
-        description: "Transfer from account #{@user.username}",
+        description: "Transferência de: #{@user.username}",
         recipient_account_id: recipient.id,
         sender_account_id: @user.id
       )
@@ -216,25 +214,25 @@ class UsersController < ApplicationController
       if transfer_fee_cents > 0
         Transaction.create!(
           user: @user,
-          transaction_type: 'transfer_fee',
+          transaction_type: "transfer_fee",
           amount: transfer_fee_cents,
-          description: "Transfer fee",
+          description: "Taxa de transferência",
           sender_account_id: @user.id # Fee is associated with sender
         )
       end
 
-      flash[:notice] = "Successfully transferred #{'R$ %.2f' % amount_in_reais} to account #{recipient.username}."
+      flash[:notice] = "Transferência realizada com sucesso! #{'R$ %.2f' % amount_in_reais} to account #{recipient.username}."
       redirect_to dashboard_path
     rescue ActiveRecord::Rollback => e
-      flash[:alert] = "Transfer failed: #{e.message}"
+      flash[:alert] = "Transferência não realizada: #{e.message}"
       redirect_to transfer_form_path
     rescue => e # Catch any other unexpected errors during transaction
-      flash[:alert] = "An unexpected error occurred during transfer: #{e.message}"
+      flash[:alert] = "Um erro inesperado ocorreu: #{e.message}"
       redirect_to transfer_form_path
     end
   end
 
-   # --- Manager Visit Actions (VIP only) ---
+  # --- Manager Visit Actions (VIP only) ---
 
   def manager_visit_confirm
     @user = current_user
@@ -246,7 +244,7 @@ class UsersController < ApplicationController
     manager_visit_fee_cents = 5000 # R$50.00
 
     if @user.balance < manager_visit_fee_cents
-      flash[:alert] = "Insufficient balance to request manager visit (R$50.00 fee)."
+      flash[:alert] = "Saldo insuficiente para agendar visita (taxa de R$50,00)."
       redirect_to dashboard_path
       return
     end
@@ -258,18 +256,18 @@ class UsersController < ApplicationController
       if @user.save
         Transaction.create!(
           user: @user,
-          transaction_type: 'manager_visit_fee',
+          transaction_type: "manager_visit_fee",
           amount: manager_visit_fee_cents,
-          description: "Manager visit request fee"
+          description: "Taxa de agendamento de visita do gerente"
         )
-        flash[:notice] = "Manager visit requested! R$50.00 debited from your account. A manager will contact you soon."
+        flash[:notice] = "Visita de gerente agendada! foi debitado o valor de R$50.00. Um gerente entrará em contato com você."
         redirect_to dashboard_path
       else
-        flash[:alert] = "Failed to process manager visit request."
+        flash[:alert] = "Falha ao agendar visita do gerente."
         raise ActiveRecord::Rollback
       end
     rescue ActiveRecord::Rollback
-      redirect_to manager_visit_confirm_path # Redirect back to confirmation if rollback occurs
+      redirect_to manager_visit_confirm_path
     end
   end
 
@@ -283,7 +281,7 @@ class UsersController < ApplicationController
       fee_per_minute_value = (user.balance.abs * 0.001)
       total_fee_cents = (fee_per_minute_value * minutes_negative).round.to_i
 
-      total_fee_cents = [total_fee_cents, user.balance.abs].min
+      total_fee_cents = [ total_fee_cents, user.balance.abs ].min
 
       if total_fee_cents > 0
         user.balance -= total_fee_cents
@@ -292,7 +290,7 @@ class UsersController < ApplicationController
         # Record the transaction
         Transaction.create!(
           user: user,
-          transaction_type: 'negative_balance_fee',
+          transaction_type: "negative_balance_fee",
           amount: total_fee_cents,
           description: "taxa de balanço negativo (VIP) para #{minutes_negative} minutos"
         )
@@ -301,5 +299,4 @@ class UsersController < ApplicationController
     # Always update the timestamp to reflect when the check happened
     user.update(last_negative_balance_at: Time.current)
   end
-
 end

@@ -1,4 +1,4 @@
-<h1>Welcome, <%= @user.username %>!</h1>
+<h1>Olá, <%= @user.username %>!</h1>
 
 <% if flash[:notice] %>
   <p style="color: green;"><%= flash[:notice] %></p>
@@ -6,9 +6,9 @@
   <p style="color: red;"><%= flash[:alert] %></p>
 <% end %>
 
-<h2>Your Current Balance: <%= @user.formatted_balance %></h2>
+<h2>Total em conta: <%= @user.formatted_balance %></h2>
 
-<h3>Menu Options:</h3>
+<h3>O que deseja ver?</h3>
 <ul>
   <li><%= link_to "Ver Saldo", dashboard_path %></li> 
   <li><%= link_to "Extrato", statement_path %></li> 

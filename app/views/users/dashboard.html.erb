@@ -14,7 +14,7 @@
   <li><%= link_to "Extrato", statement_path %></li> 
   <li><%= link_to "Saque", withdraw_form_path %></li> 
   <li><%= link_to "Depósito", deposit_form_path %></li> 
-  <li><%= link_to "Transferência", '#' %></li> 
+  <li><%= link_to "Transferência", transfer_form_path %></li> 
   <% if @user.vip? %>
     <li><%= link_to "Solicitar visita do gerente", '#' %></li> <% end %>
   <li><%= button_to "Trocar de usuário (Logout)", logout_path, method: :delete, data: { confirm: "tem certeza que deseja sair?" } %></li>

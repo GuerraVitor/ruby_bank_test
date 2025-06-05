@@ -107,6 +107,133 @@ class UsersController < ApplicationController
     @transactions = @user.transactions.order(created_at: :desc)
   end
 
+    # --- Transfer Actions ---
+
+  def transfer_form
+    @user = current_user
+  end
+
+  def process_transfer
+    @user = current_user
+    recipient_username = params[:recipient_username]
+    amount_in_reais = params[:amount].to_f
+    amount_in_cents = (amount_in_reais * 100).round # Convert to cents
+
+    # Basic validations
+    if amount_in_cents <= 0
+      flash[:alert] = "Transfer amount must be positive."
+      redirect_to transfer_form_path
+      return
+    end
+
+    if recipient_username.blank?
+      flash[:alert] = "Recipient username cannot be empty."
+      redirect_to transfer_form_path
+      return
+    end
+
+    recipient = User.find_by(username: recipient_username)
+
+    if recipient.nil?
+      flash[:alert] = "Recipient account does not exist."
+      redirect_to transfer_form_path
+      return
+    end
+
+    if recipient == @user
+      flash[:alert] = "Cannot transfer to your own account."
+      redirect_to transfer_form_path
+      return
+    end
+
+    # Calculate fee and total debit (transfer amount + fee)
+    transfer_fee_cents = 0
+    total_debit_cents = amount_in_cents
+
+    if @user.vip?
+      # VIP user: 0.8% of transferred amount
+      transfer_fee_cents = (amount_in_cents * 0.008).round.to_i
+      total_debit_cents = amount_in_cents + transfer_fee_cents
+    else # Normal User
+      # Normal user: R$8.00 fixed fee
+      transfer_fee_cents = 800 # 800 cents = R$8.00
+      total_debit_cents = amount_in_cents + transfer_fee_cents
+
+      # Normal User Transfer Limit
+      if amount_in_cents > 100000 # R$1,000.00
+        flash[:alert] = "Normal users cannot transfer more than R$1,000.00."
+        redirect_to transfer_form_path
+        return
+      end
+    end
+
+    # Check if sender has sufficient balance for the transfer + fee
+    if @user.balance < total_debit_cents
+      flash[:alert] = "Insufficient balance to cover transfer and fees."
+      redirect_to transfer_form_path
+      return
+    end
+
+    # --- Process the Transfer within a Transaction ---
+    ActiveRecord::Base.transaction do
+      # 1. Debit sender's account
+      @user.balance -= total_debit_cents
+
+      # If VIP user goes from positive to negative due to transfer, record the time
+      if @user.vip? && @user.balance >= 0 && (@user.balance - total_debit_cents < 0)
+        @user.last_negative_balance_at = Time.current
+      end
+
+      # 2. Credit recipient's account
+      recipient.balance += amount_in_cents
+
+      # 3. Save both users
+      unless @user.save && recipient.save
+        raise ActiveRecord::Rollback, "Failed to save sender or recipient account."
+      end
+
+      # 4. Create sender's transaction record
+      Transaction.create!(
+        user: @user,
+        transaction_type: 'transfer_out',
+        amount: amount_in_cents, # Amount transferred, not including fee
+        description: "Transfer to account #{recipient.username}",
+        recipient_account_id: recipient.id,
+        sender_account_id: @user.id
+      )
+
+      # 5. Create recipient's transaction record
+      Transaction.create!(
+        user: recipient,
+        transaction_type: 'transfer_in',
+        amount: amount_in_cents,
+        description: "Transfer from account #{@user.username}",
+        recipient_account_id: recipient.id,
+        sender_account_id: @user.id
+      )
+
+      # 6. Create sender's fee transaction record (if applicable)
+      if transfer_fee_cents > 0
+        Transaction.create!(
+          user: @user,
+          transaction_type: 'transfer_fee',
+          amount: transfer_fee_cents,
+          description: "Transfer fee",
+          sender_account_id: @user.id # Fee is associated with sender
+        )
+      end
+
+      flash[:notice] = "Successfully transferred #{'R$ %.2f' % amount_in_reais} to account #{recipient.username}."
+      redirect_to dashboard_path
+    rescue ActiveRecord::Rollback => e
+      flash[:alert] = "Transfer failed: #{e.message}"
+      redirect_to transfer_form_path
+    rescue => e # Catch any other unexpected errors during transaction
+      flash[:alert] = "An unexpected error occurred during transfer: #{e.message}"
+      redirect_to transfer_form_path
+    end
+  end
+
   private
 
   def calculate_and_apply_vip_negative_balance_fee(user)

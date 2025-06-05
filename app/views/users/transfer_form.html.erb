@@ -7,11 +7,11 @@
 <%= form_with url: process_transfer_path, local: true do |form| %>
   <div>
     <%= form.label :recipient_username, "Conta destino (5 dígitos)" %>
-    <%= form.text_field :recipient_username, required: true, pattern: "\\d{5}", title: "id de destino precisa ter 5 dígitos" %>
+    <%= form.text_field :recipient_username, required: true, pattern: "\\d{5}", title: "id de destino precisa ter 5 dígitos", placeholder: "ex. 98765" %>
   </div>
   <div>
     <%= form.label :amount, "Quantia (R$)" %>
-    <%= form.number_field :amount, step: "0.01", min: "0.01", required: true, placeholder: "e.g., 50.00" %>
+    <%= form.number_field :amount, step: "0.01", min: "0.01", required: true, placeholder: "ex. 100.00" %>
   </div>
   <div>
     <%= form.submit "Transferir" %>

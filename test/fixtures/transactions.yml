@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  transaction_type: MyString
+  amount: 9.99
+  description: MyString
+  recipient_account_id: 1
+  sender_account_id: 1
+
+two:
+  user: two
+  transaction_type: MyString
+  amount: 9.99
+  description: MyString
+  recipient_account_id: 1
+  sender_account_id: 1

@@ -1,0 +1,36 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: checking_account_manager_development
+  username: vitor
+  password: senha123
+  host: localhost 
+
+test:
+  <<: *default
+  database: checking_account_manager_test
+  username: vitor 
+  password: senha123
+  host: localhost
+
+  primary: &primary_production
+    <<: *default
+    database: checking_account_manager_production
+    username: checking_account_manager
+    password: <%= ENV["CHECKING_ACCOUNT_MANAGER_DATABASE_PASSWORD"] %>
+  cache:
+    <<: *primary_production
+    database: checking_account_manager_production_cache
+    migrations_paths: db/cache_migrate
+  queue:
+    <<: *primary_production
+    database: checking_account_manager_production_queue
+    migrations_paths: db/queue_migrate
+  cable:
+    <<: *primary_production
+    database: checking_account_manager_production_cable
+    migrations_paths: db/cable_migrate

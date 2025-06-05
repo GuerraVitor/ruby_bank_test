@@ -101,6 +101,12 @@ class UsersController < ApplicationController
     end
   end
 
+  # --- Statement Action ---
+  def statement
+    @user = current_user
+    @transactions = @user.transactions.order(created_at: :desc)
+  end
+
   private
 
   def calculate_and_apply_vip_negative_balance_fee(user)

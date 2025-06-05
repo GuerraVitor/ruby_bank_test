@@ -15,4 +15,6 @@ Rails.application.routes.draw do
 
   get 'withdraw', to: 'users#withdraw_form', as: :withdraw_form
   post 'withdraw', to: 'users#process_withdraw', as: :process_withdraw
+
+  get 'statement', to: 'users#statement', as: :statement
 end

@@ -1,0 +1,40 @@
+<h1>Account Statement for <%= @user.username %></h1>
+
+<h2>Em conta: <%= @user.formatted_balance %></h2>
+
+<% if @transactions.empty? %>
+  <p>Sem transações.</p>
+<% else %>
+  <table border="1" style="width:100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th style="padding: 8px; text-align: left;">Data</th>
+        <th style="padding: 8px; text-align: left;">Hora</th>
+        <th style="padding: 8px; text-align: left;">Operação</th>
+        <th style="padding: 8px; text-align: right;">Quantia (R$)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @transactions.each do |transaction| %>
+        <tr>
+          <td style="padding: 8px;"><%= transaction.created_at.strftime("%Y-%m-%d") %></td>
+          <td style="padding: 8px;"><%= transaction.created_at.strftime("%H:%M:%S") %></td>
+          <td style="padding: 8px;"><%= transaction.description %></td>
+          <td style="padding: 8px; text-align: right;">
+            <% if transaction.transaction_type == 'withdrawal' ||
+                  transaction.transaction_type == 'transfer_out' ||
+                  transaction.transaction_type == 'transfer_fee' ||
+                  transaction.transaction_type == 'manager_visit_fee' ||
+                  transaction.transaction_type == 'negative_balance_fee' %>
+              (<%= transaction.formatted_amount %>)
+            <% else %>
+              <%= transaction.formatted_amount %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<%= link_to "Voltar para o Menu", dashboard_path %>

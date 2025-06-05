@@ -10,8 +10,6 @@
 
     <%= yield :head %>
 
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
@@ -21,7 +19,7 @@
   </head>
 
   <body>
-    <div class="container"> <%# This is the main Bootstrap container %>
+    <div class="container-fluid border border-4 rounded-3 p-3 my-3"> <%# This is the main Bootstrap container %>
       <% if flash[:notice] %>
         <div class="flash-message flash-notice">
           <%= flash[:notice] %>

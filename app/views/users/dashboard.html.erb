@@ -6,16 +6,19 @@
   <p style="color: red;"><%= flash[:alert] %></p>
 <% end %>
 
-<h2>Total em conta: <%= @user.formatted_balance %></h2>
+<div id="balance-container">
+  <h2 id="current-balance" style="display: none;">Total em conta: <%= @user.formatted_balance %></h2>
+  <button id="toggle-balance-button" class="btn btn-info w-100 mb-3">Ver Saldo</button>
+</div>
 
 <h3>O que deseja ver?</h3>
 <ul>
-  <li><%= link_to "Ver Saldo", dashboard_path %></li> 
-  <li><%= link_to "Extrato", statement_path %></li> 
-  <li><%= link_to "Saque", withdraw_form_path %></li> 
-  <li><%= link_to "Depósito", deposit_form_path %></li> 
-  <li><%= link_to "Transferência", transfer_form_path %></li> 
+  <li><%= link_to "Extrato", statement_path %></li>
+  <li><%= link_to "Saque", withdraw_form_path %></li>
+  <li><%= link_to "Depósito", deposit_form_path %></li>
+  <li><%= link_to "Transferência", transfer_form_path %></li>
   <% if @user.vip? %>
-    <li><%= link_to "Solicitar visita do gerente", manager_visit_confirm_path %></li> <% end %>
-  <li><%= button_to "Trocar de usuário (Logout)", logout_path, method: :delete, data: { confirm: "tem certeza que deseja sair?" } %></li>
+    <li><%= link_to "Solicitar visita do gerente", manager_visit_confirm_path %></li>
+  <% end %>
+  <li><%= button_to "Trocar de usuário (sair)", logout_path, method: :delete, data: { confirm: "tem certeza que deseja sair?" } %></li>
 </ul>

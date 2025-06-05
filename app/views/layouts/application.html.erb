@@ -18,10 +18,25 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%# Make sure your main SCSS file is now app/assets/stylesheets/app.scss %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
 
   <body>
-    <%= yield %>
+    <div class="container"> <%# This is the main Bootstrap container %>
+      <%# Flash Messages (using our custom classes for Bootstrap-like styling) %>
+      <% if flash[:notice] %>
+        <div class="flash-message flash-notice">
+          <%= flash[:notice] %>
+        </div>
+      <% elsif flash[:alert] %>
+        <div class="flash-message flash-alert">
+          <%= flash[:alert] %>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </div> <%# End of Bootstrap container %>
   </body>
 </html>

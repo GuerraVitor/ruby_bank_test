@@ -6,6 +6,11 @@ class Transaction < ApplicationRecord
   belongs_to :sender, class_name: 'User', foreign_key: 'sender_account_id', optional: true
 
   validates :transaction_type, presence: true
-  validates :amount, presence: true, numericality: { greater_than: 0 }
+  validates :amount, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :description, presence: true
+
+   def formatted_amount
+    "R$ %.2f" % (amount / 100.0)
+  end
+
 end

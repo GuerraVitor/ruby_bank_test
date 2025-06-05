@@ -16,29 +16,121 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+
+    <style>
+      :root {
+        --theme-darkest-green: #18230F;
+        --theme-dark-green: #27391C;
+        --theme-primary-green: #255F38;
+        --theme-accent-green: #1F7D53;
+        --theme-text-on-dark: #f8f9fa; /* Bootstrap light */
+        --theme-text-on-primary: #ffffff;
+        --theme-danger-red: #DC3545; /* Bootstrap danger red */
+      }
+
+      .bg-theme-dark {
+        background-color: var(--theme-darkest-green) !important;
+      }
+
+      .navbar-dark .navbar-brand {
+        color: var(--theme-text-on-dark);
+      }
+      .navbar-dark .navbar-brand:hover, .navbar-dark .navbar-brand:focus {
+        color: #ffffff;
+      }
+
+      .footer.bg-theme-dark {
+        background-color: var(--theme-darkest-green) !important;
+        color: var(--theme-text-on-dark) !important;
+      }
+
+      .text-theme-accent {
+        color: var(--theme-accent-green) !important;
+      }
+
+      .btn-theme-primary {
+        background-color: var(--theme-primary-green) !important;
+        border-color: var(--theme-primary-green) !important;
+        color: var(--theme-text-on-primary) !important;
+      }
+      .btn-theme-primary:hover {
+        background-color: #1e4a2c !important; /* Darker shade of primary-green */
+        border-color: #1e4a2c !important;
+      }
+
+      .btn-theme-success {
+        background-color: var(--theme-accent-green) !important;
+        border-color: var(--theme-accent-green) !important;
+        color: var(--theme-text-on-primary) !important;
+      }
+      .btn-theme-success:hover {
+        background-color: #1a6845 !important; /* Darker shade of accent-green */
+        border-color: #1a6845 !important;
+      }
+
+      .btn-theme-info {
+        background-color: var(--theme-dark-green) !important;
+        border-color: var(--theme-dark-green) !important;
+        color: var(--theme-text-on-primary) !important;
+      }
+      .btn-theme-info:hover {
+        background-color: #1b2b14 !important; /* Darker shade of dark-green */
+        border-color: #1b2b14 !important;
+      }
+
+      .alert-theme-success {
+        color: var(--theme-darkest-green);
+        background-color: #e0f2f1; /* Light shade related to accent-green */
+        border-color: #b2dfdb; /* Border related to accent-green */
+      }
+
+      .alert-theme-danger { /* Standard red for danger */
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+      }
+
+      .alert-theme-info {
+        color: var(--theme-darkest-green);
+        background-color: #e8f5e9; /* Light shade related to primary or dark green */
+        border-color: #c8e6c9;
+      }
+
+      .table-theme-dark th {
+        background-color: var(--theme-dark-green) !important;
+        color: var(--theme-text-on-dark) !important;
+      }
+
+      .text-transaction-positive {
+        color: var(--theme-accent-green) !important;
+      }
+      .text-transaction-negative {
+        color: var(--theme-danger-red) !important;
+      }
+    </style>
   </head>
 
   <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-theme-dark mb-4">
       <div class="container">
         <a class="navbar-brand fw-bold" href="<%= dashboard_path %>">Conta Corrente</a>
       </div>
     </nav>
     <div class="container">
       <% if flash[:notice] %>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert alert-theme-success alert-dismissible fade show" role="alert">
           <%= flash[:notice] %>
           <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
       <% elsif flash[:alert] %>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div class="alert alert-theme-danger alert-dismissible fade show" role="alert">
           <%= flash[:alert] %>
           <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
       <% end %>
       <%= yield %>
     </div>
-    <footer class="footer mt-5 py-3 bg-primary text-white text-center">
+    <footer class="footer mt-5 py-3 bg-theme-dark text-white text-center">
       <div class="container">
         <span>Conta Corrente &copy; <%= Time.current.year %></span>
       </div>

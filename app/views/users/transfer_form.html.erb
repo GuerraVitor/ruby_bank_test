@@ -1,7 +1,7 @@
 <h1>Transferência</h1>
 
 <% if flash[:alert] %>
-  <p style="color: red;"><%= flash[:alert] %></p>
+  <div class="alert alert-theme-danger"><%= flash[:alert] %></div>
 <% end %>
 
 <%= form_with url: process_transfer_path, local: true do |form| %>
@@ -14,7 +14,7 @@
     <%= form.number_field :amount, step: "0.01", min: "0.01", required: true, placeholder: "ex. 100.00" %>
   </div>
   <div>
-    <%= form.submit "Transferir" %>
+    <%= form.submit "Transferir", class: "btn btn-theme-primary" %>
   </div>
 <% end %>
 

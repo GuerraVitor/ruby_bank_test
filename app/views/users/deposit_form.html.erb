@@ -1,7 +1,7 @@
-<h1 class="mb-4 text-primary">Depositar</h1>
+<h1 class="mb-4 text-theme-accent">Depositar</h1>
 
 <% if flash[:alert] %>
-  <div class="alert alert-danger"><%= flash[:alert] %></div>
+  <div class="alert alert-theme-danger"><%= flash[:alert] %></div>
 <% end %>
 
 <%= form_with url: process_deposit_path, local: true, html: { class: "card p-4 shadow-sm" } do |form| %>
@@ -10,7 +10,7 @@
     <%= form.number_field :amount, step: "0.01", min: "0.01", required: true, placeholder: "ex. 100.00", class: "form-control" %>
   </div>
   <div>
-    <%= form.submit "Depositar", class: "btn btn-success w-100" %>
+    <%= form.submit "Depositar", class: "btn btn-theme-success w-100" %>
   </div>
 <% end %>
 

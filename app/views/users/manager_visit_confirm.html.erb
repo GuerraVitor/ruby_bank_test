@@ -1,7 +1,7 @@
 <h1>Solicitar Visita</h1>
 
 <% if flash[:alert] %>
-  <p style="color: red;"><%= flash[:alert] %></p>
+  <div class="alert alert-theme-danger"><%= flash[:alert] %></div>
 <% end %>
 
 <p>
@@ -11,7 +11,7 @@
 
 <%= form_with url: request_manager_visit_path, local: true do |form| %>
   <div>
-    <%= form.submit "Confirmar Visita", data: { confirm: "confirmar débito de R$50,00 pela visita?" } %>
+    <%= form.submit "Confirmar Visita", class: "btn btn-theme-primary", data: { confirm: "confirmar débito de R$50,00 pela visita?" } %>
   </div>
 <% end %>
 

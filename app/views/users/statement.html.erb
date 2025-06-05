@@ -1,6 +1,6 @@
-<h1 class="text-center mb-4 text-primary">Extrato da Conta de <%= @user.username %></h1>
+<h1 class="text-center mb-4 text-theme-accent">Extrato da Conta de <%= @user.username %></h1>
 
-<div class="alert alert-info text-center mb-4 shadow-sm" role="alert">
+<div class="alert alert-theme-info text-center mb-4 shadow-sm" role="alert">
   <h2>Saldo Atual: <%= @user.formatted_balance %></h2>
 </div>
 
@@ -8,9 +8,9 @@
   <p class="alert alert-light text-center" role="alert">Não há transações para exibir ainda.</p>
 <% else %>
   <div class="table-responsive">
-    <table class="table table-bordered table-striped table-hover caption-top">
+    <table class="table table-bordered table-striped table-hover caption-top table-theme-dark">
       <caption>Últimas Transações</caption>
-      <thead class="table-dark">
+      <thead>
         <tr>
           <th scope="col" style="width: 15%;">Data</th>
           <th scope="col" style="width: 10%;">Hora</th>
@@ -30,9 +30,9 @@
                     transaction.transaction_type == 'transfer_fee' ||
                     transaction.transaction_type == 'manager_visit_fee' ||
                     transaction.transaction_type == 'negative_balance_fee' %>
-                <span class="text-danger fw-bold"> (<%= transaction.formatted_amount %>) </span>
+                <span class="text-transaction-negative fw-bold"> (<%= transaction.formatted_amount %>) </span>
               <% else %>
-                <span class="text-success fw-bold"> <%= transaction.formatted_amount %> </span>
+                <span class="text-transaction-positive fw-bold"> <%= transaction.formatted_amount %> </span>
               <% end %>
             </td>
           </tr>

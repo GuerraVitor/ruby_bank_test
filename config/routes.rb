@@ -20,4 +20,7 @@ Rails.application.routes.draw do
 
   get 'transfer', to: 'users#transfer_form', as: :transfer_form
   post 'transfer', to: 'users#process_transfer', as: :process_transfer
+
+  get 'manager_visit_confirm', to: 'users#manager_visit_confirm', as: :manager_visit_confirm
+  post 'request_manager_visit', to: 'users#request_manager_visit', as: :request_manager_visit
 end

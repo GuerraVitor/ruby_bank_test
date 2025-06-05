@@ -234,6 +234,45 @@ class UsersController < ApplicationController
     end
   end
 
+   # --- Manager Visit Actions (VIP only) ---
+
+  def manager_visit_confirm
+    @user = current_user
+    # Nothing else needed here, just renders the confirmation view
+  end
+
+  def request_manager_visit
+    @user = current_user
+    manager_visit_fee_cents = 5000 # R$50.00
+
+    if @user.balance < manager_visit_fee_cents
+      flash[:alert] = "Insufficient balance to request manager visit (R$50.00 fee)."
+      redirect_to dashboard_path
+      return
+    end
+
+    ActiveRecord::Base.transaction do
+      @user.balance -= manager_visit_fee_cents
+      @user.last_negative_balance_at = Time.current if @user.vip? && @user.balance < 0 # Update timestamp if VIP goes negative
+
+      if @user.save
+        Transaction.create!(
+          user: @user,
+          transaction_type: 'manager_visit_fee',
+          amount: manager_visit_fee_cents,
+          description: "Manager visit request fee"
+        )
+        flash[:notice] = "Manager visit requested! R$50.00 debited from your account. A manager will contact you soon."
+        redirect_to dashboard_path
+      else
+        flash[:alert] = "Failed to process manager visit request."
+        raise ActiveRecord::Rollback
+      end
+    rescue ActiveRecord::Rollback
+      redirect_to manager_visit_confirm_path # Redirect back to confirmation if rollback occurs
+    end
+  end
+
   private
 
   def calculate_and_apply_vip_negative_balance_fee(user)

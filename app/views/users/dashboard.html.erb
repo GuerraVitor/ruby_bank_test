@@ -1,23 +1,23 @@
-<h1>Olá, <%= @user.username %>!</h1>
-
-</p> 
-<% if flash[:alert] %>
-  <p style="color: red;"><%= flash[:alert] %></p>
-<% end %>
-
-<div id="balance-container">
-  <h2 id="current-balance" style="display: none;">Total em conta: <%= @user.formatted_balance %></h2>
-  <button id="toggle-balance-button" class="btn btn-info w-100 mb-3">Ver Saldo</button>
-</div>
-
-<h3>O que deseja ver?</h3>
-<ul>
-  <li><%= link_to "Extrato", statement_path %></li>
-  <li><%= link_to "Saque", withdraw_form_path %></li>
-  <li><%= link_to "Depósito", deposit_form_path %></li>
-  <li><%= link_to "Transferência", transfer_form_path %></li>
-  <% if @user.vip? %>
-    <li><%= link_to "Solicitar visita do gerente", manager_visit_confirm_path %></li>
+<div class="card shadow-sm p-4 mb-4">
+  <h1 class="mb-3 text-primary">Olá, <%= @user.username %>!</h1>
+  <% if flash[:alert] %>
+    <div class="alert alert-danger"><%= flash[:alert] %></div>
   <% end %>
-  <li><%= button_to "Trocar de usuário (sair)", logout_path, method: :delete, data: { confirm: "tem certeza que deseja sair?" } %></li>
-</ul>
+  <div id="balance-container" class="mb-4">
+    <h2 id="current-balance" style="display: none;">Total em conta: <%= @user.formatted_balance %></h2>
+    <button id="toggle-balance-button" class="btn btn-info w-100 mb-3">Ver Saldo</button>
+  </div>
+  <h3 class="mb-3">O que deseja fazer?</h3>
+  <ul class="list-group mb-3">
+    <li class="list-group-item"><%= link_to "Extrato", statement_path, class: "text-decoration-none" %></li>
+    <li class="list-group-item"><%= link_to "Saque", withdraw_form_path, class: "text-decoration-none" %></li>
+    <li class="list-group-item"><%= link_to "Depósito", deposit_form_path, class: "text-decoration-none" %></li>
+    <li class="list-group-item"><%= link_to "Transferência", transfer_form_path, class: "text-decoration-none" %></li>
+    <% if @user.vip? %>
+      <li class="list-group-item"><%= link_to "Solicitar visita do gerente", manager_visit_confirm_path, class: "text-decoration-none" %></li>
+    <% end %>
+    <li class="list-group-item">
+      <%= button_to "Trocar de usuário (sair)", logout_path, method: :delete, data: { confirm: "tem certeza que deseja sair?" }, class: "btn btn-danger w-100" %>
+    </li>
+  </ul>
+</div>

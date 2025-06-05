@@ -1,5 +1,3 @@
-// app/assets/javascripts/dashboard.js
-
 document.addEventListener('DOMContentLoaded', function() {
   const toggleButton = document.getElementById('toggle-balance-button');
   const currentBalanceElement = document.getElementById('current-balance');
@@ -7,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const actualBalanceText = currentBalanceElement.innerHTML; 
   const maskedBalanceText = "Total em conta: ******";
 
-  // Oculta o saldo na inicialização e
   currentBalanceElement.innerHTML = maskedBalanceText; 
   currentBalanceElement.style.display = 'block';
   toggleButton.textContent = 'Ver Saldo';

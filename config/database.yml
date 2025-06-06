@@ -2,35 +2,53 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  # Esta linha é crucial. Ela permite que o Rails use a variável de ambiente DATABASE_URL,
+  # que será fornecida pelo docker-compose.yml.
+  url: <%= ENV['DATABASE_URL'] %>
 
 development:
   <<: *default
-  database: checking_account_manager_development
-  username: vitor
-  password: senha123
-  host: localhost 
+  # O nome do banco de dados para o ambiente de desenvolvimento.
+  # A DATABASE_URL (definida no docker-compose.yml) terá precedência e já inclui o nome do banco.
+  # Este valor é usado como fallback ou por tasks como `db:create` se a DATABASE_URL não especificar o banco.
+  # Alinhado com a variável POSTGRES_DB do docker-compose.yml que sugeri anteriormente.
+  database: bank_app_development
 
 test:
   <<: *default
-  database: checking_account_manager_test
-  username: vitor 
-  password: senha123
-  host: localhost
+  # O nome do banco de dados para o ambiente de teste.
+  # A DATABASE_URL (se configurada para o ambiente de teste) terá precedência.
+  database: bank_app_test
 
-  primary: &primary_production
-    <<: *default
+# A seção de produção e suas sub-configurações para múltiplos bancos de dados
+# estavam aninhadas incorretamente dentro da seção 'test'.
+# Elas foram movidas para o nível correto aqui.
+production:
+  # Configuração para o banco de dados principal (primary)
+  primary: &primary_production_config # Define um anchor YAML para reutilização
+    <<: *default # Herda adapter, encoding, pool e a configuração de 'url' do default
+    # A DATABASE_URL (ou uma PRIMARY_DATABASE_URL específica) definida no ambiente de produção será usada.
+    # O nome do banco abaixo serve como fallback ou referência se a URL não o especificar.
     database: checking_account_manager_production
-    username: checking_account_manager
-    password: <%= ENV["CHECKING_ACCOUNT_MANAGER_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *primary_production
+    # username e password também virão da DATABASE_URL em produção.
+    # Exemplo de como era antes, mas DATABASE_URL é preferível:
+    # username: checking_account_manager
+    # password: <%= ENV["CHECKING_ACCOUNT_MANAGER_DATABASE_PASSWORD"] %>
+
+  # Configurações para outros bancos de dados (cache, queue, cable) se estiver usando múltiplos bancos.
+  # Cada um pode ter sua própria URL (ex: CACHE_DATABASE_URL) ou herdar da configuração 'primary'.
+  cache_db: # Nome do "papel" do banco, ex: cache_db
+    <<: *primary_production_config # Reutiliza a configuração base de 'primary'
+    url: <%= ENV['CACHE_DATABASE_URL'] || ENV['DATABASE_URL'] %> # Usa URL específica ou fallback para a global
     database: checking_account_manager_production_cache
     migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
+  queue_db:
+    <<: *primary_production_config
+    url: <%= ENV['QUEUE_DATABASE_URL'] || ENV['DATABASE_URL'] %>
     database: checking_account_manager_production_queue
     migrations_paths: db/queue_migrate
-  cable:
-    <<: *primary_production
+  cable_db:
+    <<: *primary_production_config
+    url: <%= ENV['CABLE_DATABASE_URL'] || ENV['DATABASE_URL'] %>
     database: checking_account_manager_production_cable
     migrations_paths: db/cable_migrate

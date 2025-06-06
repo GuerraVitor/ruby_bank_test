@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:13-alpine # Imagem oficial do PostgreSQL (versão 13, baseada em Alpine para ser menor)

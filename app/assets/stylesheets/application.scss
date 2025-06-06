@@ -1,17 +1,22 @@
-// 1. Importe as funções do Bootstrap
 @import "bootstrap/functions";
 
-// 2. Importe as variáveis do Bootstrap
+$primary:       #1F7D53; 
+$secondary:     #255F38; 
+
+
+$success:       $secondary; 
+$info:          $primary;   
+
+$navbar-dark-bg: #27391C;
+
+
 @import "bootstrap/variables";
 @import "bootstrap/variables-dark";
 
-// 3. Importe as variáveis do tema Vapor (elas sobrescrevem as do Bootstrap onde aplicável)
-@import "vapor_variables";
 
-// 4. Importe os componentes principais do Bootstrap
 @import "bootstrap/maps";
 @import "bootstrap/mixins";
 @import "bootstrap/root";
 
-// 5. Importe o tema Vapor (usa todas as variáveis já definidas)
-@import "vapor_bootswatch";
+
+@import "bootstrap";

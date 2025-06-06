@@ -18,6 +18,6 @@
     <% end %>
   </div>
 
-  <%= button_to "Trocar de usuário (sair)", logout_path, method: :delete, data: { confirm: "Tem certeza que deseja sair?" }, class: "btn btn-danger w-100 btn-lg" %>
+  <%= button_to "Trocar de conta (sair)", logout_path, method: :delete, data: { turbo_confirm: "Tem certeza que deseja sair?" }, class: "btn btn-danger w-100 btn-lg" %>
 
 </div>

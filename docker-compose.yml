@@ -31,7 +31,7 @@ services:
         bundle exec rails server -b 0.0.0.0 -p 3000
       "
     volumes:
-      - .:/app # Monta o diretório do projeto no container (útil para desenvolvimento)
+      #- .:/app # Monta o diretório do projeto no container (útil para desenvolvimento)
       - bundle_cache:/usr/local/bundle # Cache para as gems
     ports:
       - "3000:3000" # Mapeia a porta 3000 do host para a porta 3000 do container web

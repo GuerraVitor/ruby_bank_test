@@ -7,7 +7,7 @@ Projeto para vaga de estágio.
 Para executar este projeto, você precisará ter instalado:
 
 *   [Docker](https://docs.docker.com/get-docker/)
-*   [Docker Compose](https://docs.docker.com/compose/install/) (geralmente vem com o Docker Desktop)
+*   [Docker Compose](https://docs.docker.com/compose/install/) 
 
 ## Como Executar o Projeto (Usando Docker)
 

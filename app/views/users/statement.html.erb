@@ -1,14 +1,14 @@
-<h1 class="text-center mb-4 text-theme-accent">Extrato da Conta de <%= @user.username %></h1>
+<h1 class="text-center mb-4 text-primary">Extrato da Conta de <%= @user.username %></h1>
 
-<div class="alert alert-theme-info text-center mb-4 shadow-sm" role="alert">
-  <h2>Saldo Atual: <%= @user.formatted_balance %></h2>
+<div class="alert alert-info text-center mb-4 p-3 shadow-sm" role="alert">
+  <h2 class="h4 mb-0">Saldo Atual: <strong class="fw-bold"><%= @user.formatted_balance %></strong></h2>
 </div>
 
 <% if @transactions.empty? %>
-  <p class="alert alert-light text-center" role="alert">Não há transações para exibir ainda.</p>
+  <p class="alert alert-secondary text-center" role="alert">Não há transações para exibir ainda.</p>
 <% else %>
-  <div class="table-responsive">
-    <table class="table table-bordered table-striped table-hover caption-top table-theme-dark">
+  <div class="table-responsive card shadow-sm mb-3">
+    <table class="table table-striped table-hover table-bordered caption-top mb-0">
       <caption>Últimas Transações</caption>
       <thead>
         <tr>
@@ -30,9 +30,9 @@
                     transaction.transaction_type == 'transfer_fee' ||
                     transaction.transaction_type == 'manager_visit_fee' ||
                     transaction.transaction_type == 'negative_balance_fee' %>
-                <span class="text-transaction-negative fw-bold"> (<%= transaction.formatted_amount %>) </span>
+                <span class="text-danger fw-bold"> (<%= transaction.formatted_amount %>) </span>
               <% else %>
-                <span class="text-transaction-positive fw-bold"> <%= transaction.formatted_amount %> </span>
+                <span class="text-success fw-bold"> <%= transaction.formatted_amount %> </span>
               <% end %>
             </td>
           </tr>
@@ -41,5 +41,4 @@
     </table>
   </div>
 <% end %>
-
-<%= link_to "Voltar ao Dashboard", dashboard_path, class: "btn btn-secondary w-100 mt-3" %>
+<%= link_to "Voltar ao Dashboard", dashboard_path, class: "btn btn-secondary w-100 btn-lg mt-4" %>

@@ -1,21 +1,25 @@
-<h1>Transferência</h1>
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card p-4 shadow-lg">
+      <h1 class="text-center text-primary">Transferência</h1>
 
-<% if flash[:alert] %>
-  <div class="alert alert-theme-danger"><%= flash[:alert] %></div>
-<% end %>
+      <% if flash[:alert] %>
+        <div class="alert alert-danger"><%= flash[:alert] %></div>
+      <% end %>
 
-<%= form_with url: process_transfer_path, local: true do |form| %>
-  <div>
-    <%= form.label :recipient_username, "Conta destino (5 dígitos)" %>
-    <%= form.text_field :recipient_username, required: true, pattern: "\\d{5}", title: "id de destino precisa ter 5 dígitos", placeholder: "ex. 98765" %>
-  </div>
-  <div>
-    <%= form.label :amount, "Quantia (R$)" %>
-    <%= form.number_field :amount, step: "0.01", min: "0.01", required: true, placeholder: "ex. 100.00" %>
-  </div>
-  <div>
-    <%= form.submit "Transferir", class: "btn btn-theme-primary" %>
-  </div>
-<% end %>
+      <%= form_with url: process_transfer_path, local: true, class: "mt-3" do |form| %>
+        <div class="mb-3">
+          <%= form.label :recipient_username, "Conta destino (5 dígitos)", class: "form-label" %>
+          <%= form.text_field :recipient_username, required: true, pattern: "\\d{5}", title: "ID de destino precisa ter 5 dígitos", placeholder: "Ex: 98765", class: "form-control form-control-lg" %>
+        </div>
+        <div class="mb-3">
+          <%= form.label :amount, "Quantia (R$)", class: "form-label" %>
+          <%= form.number_field :amount, step: "0.01", min: "0.01", required: true, placeholder: "Ex: 100.00", class: "form-control form-control-lg" %>
+        </div>
+        <%= form.submit "Transferir", class: "btn btn-primary w-100 btn-lg" %>
+      <% end %>
 
-<%= link_to "Voltar ao Menu", dashboard_path %>
+      <%= link_to "Voltar ao Menu", dashboard_path, class: "btn btn-link mt-4 d-block text-center" %>
+    </div>
+  </div>
+</div>

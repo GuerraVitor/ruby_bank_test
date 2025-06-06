@@ -1,18 +1,22 @@
-<h1>Solicitar Visita</h1>
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-7">
+    <div class="card p-4 p-md-5 shadow-lg text-center">
+      <h1 class="text-primary">Solicitar Visita do Gerente</h1>
 
-<% if flash[:alert] %>
-  <div class="alert alert-theme-danger"><%= flash[:alert] %></div>
-<% end %>
+      <% if flash[:alert] %>
+        <div class="alert alert-danger"><%= flash[:alert] %></div>
+      <% end %>
 
-<p>
-  Solicitar uma visita de um gerente custará R$50.00 que serão debitados da sua conta.
-  Deseja continuar?
-</p>
+      <p class="lead mt-3 mb-4">
+        Solicitar uma visita de um gerente custará <strong>R$50,00</strong> que serão debitados da sua conta.
+        Deseja continuar?
+      </p>
 
-<%= form_with url: request_manager_visit_path, local: true do |form| %>
-  <div>
-    <%= form.submit "Confirmar Visita", class: "btn btn-theme-primary", data: { confirm: "confirmar débito de R$50,00 pela visita?" } %>
+      <%= form_with url: request_manager_visit_path, local: true, class: "d-grid gap-2" do |form| %>
+        <%= form.submit "Confirmar Visita", class: "btn btn-primary btn-lg", data: { turbo_confirm: "Confirmar débito de R$50,00 pela visita?" } %>
+      <% end %>
+
+      <%= link_to "Cancelar e voltar ao Menu Principal", dashboard_path, class: "btn btn-link mt-4 d-block" %>
+    </div>
   </div>
-<% end %>
-
-<%= link_to "Cancelar e voltar ao Menu Principal", dashboard_path %>
+</div>

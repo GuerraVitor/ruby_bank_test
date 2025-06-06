@@ -1,84 +1,17 @@
-@import 'bootstrap';
+// 1. Importe as funções do Bootstrap
+@import "bootstrap/functions";
 
-body {
-  padding-top: 20px;
-  padding-bottom: 20px;
-  background-color: #f8f9fa;
-  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  margin: 120px;
-}
+// 2. Importe as variáveis do Bootstrap
+@import "bootstrap/variables";
+@import "bootstrap/variables-dark";
 
-.form-label {
-  margin-bottom: 5px;
-}
-.form-control {
-  margin-bottom: 15px;
-}
-.btn {
-  width: 100%;
-}
-.flash-message {
-  padding: 10px;
-  margin-bottom: 20px;
-  border-radius: 4px;
-  font-weight: bold;
-}
-.flash-notice {
-  background-color: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-}
-.flash-alert {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-.alert-info {
-  background-color: #e2f3fc;
-  color: #0c5460;
-  border-color: #bee5eb;
-}
-.alert-warning {
-  background-color: #fff3cd;
-  color: #856404;
-  border-color: #ffeeba;
-}
-.table th, .table td {
-    padding: 0.75rem;
-    vertical-align: middle;
-    border-top: 1px solid #dee2e6;
-}
+// 3. Importe as variáveis do tema Vapor (elas sobrescrevem as do Bootstrap onde aplicável)
+@import "vapor_variables";
 
-/* Custom styles for aesthetic improvements */
-.text-primary {
-    color: #007bff !important;
-}
-.text-danger {
-    color: #dc3545 !important;
-}
-.text-success {
-    color: #28a745 !important;
-}
-.shadow-sm {
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
-}
-.card-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid rgba(0,0,0,.125);
-}
-.list-group-item {
-    background-color: #fff;
-    border: 1px solid rgba(0,0,0,.125);
-    margin-bottom: -1px;
-}
-.list-group-item:first-child {
-    border-top-left-radius: .25rem;
-    border-top-right-radius: .25rem;
-}
-.list-group-item:last-child {
-    border-bottom-left-radius: .25rem;
-    border-bottom-right-radius: .25rem;
-}
-.list-group-item:hover {
-    background-color: #f8f9fa;
-}
+// 4. Importe os componentes principais do Bootstrap
+@import "bootstrap/maps";
+@import "bootstrap/mixins";
+@import "bootstrap/root";
+
+// 5. Importe o tema Vapor (usa todas as variáveis já definidas)
+@import "vapor_bootswatch";
